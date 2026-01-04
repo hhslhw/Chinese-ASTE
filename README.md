@@ -1,105 +1,47 @@
-# Chinese-ASTE
-个人nlp课程大作业，选用Qwen3与Gemini的轻量化模型完成中文ASTE任务
-🎭 基于 LLM 的中文属性级情感三元组抽取 (ASTE)
-自然语言处理课程设计 | 上海海事大学
+# 基于轻量化 LLM 的中文属性级情感三元组抽取 (ASTE)
 
-模型： Qwen-1.7B / Qwen-4B / Gemma-4B
-方法： Zero-shot / Few-shot ICL / LoRA Fine-tuning
+> **自然语言处理课程设计**
+>
+> **模型：** Qwen-1.7B / Qwen-4B / Gemma-4B
+> **方法：** Zero-shot / Few-shot ICL / LoRA Fine-tuning
 
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
+[![PEFT](https://img.shields.io/badge/PEFT-LoRA-orange)](https://github.com/huggingface/peft)
+[![Transformers](https://img.shields.io/badge/Transformers-HuggingFace-yellow)](https://huggingface.co/docs/transformers/index)
 
+## 项目简介 (Introduction)
 
+本项目针对 **中文属性级情感分析 (Aspect Sentiment Triplet Extraction, ASTE)** 任务，探索了轻量级大语言模型（<7B）的性能边界。任务目标是从非结构化评论中抽取 `(评价对象 Aspect, 观点词 Opinion, 情感极性 Sentiment)` 三元组。
 
+我们基于 **Qwen (通义千问)** 和 **Gemma** 系列模型，系统对比了零样本推理 (Zero-shot)、少样本学习 (Few-shot) 以及 **LoRA 指令微调**的效果。
 
-📖 项目简介 (Introduction)
-本项目针对 中文属性级情感分析 (Aspect Sentiment Triplet Extraction, ASTE) 任务，探索了轻量级大语言模型（<7B）的性能边界。任务目标是从非结构化评论中抽取 (评价对象 Aspect, 观点词 Opinion, 情感极性 Sentiment) 三元组。
+原数据集下载地址：https://github.com/chiawen0104/chn_review_aste
+模型下载自hugging face平台
 
-我们基于 Qwen (通义千问) 和 Gemma 系列模型，系统对比了零样本推理 (Zero-shot)、少样本学习 (Few-shot) 以及 LoRA 指令微调的效果。实验证明，通过参数高效微调，1.7B 的小模型在垂直领域的结构化抽取任务上可以达到工业级可用水平。
+## 核心工作 (Core Work)
 
-✨ 核心特性 (Key Features)
-多模型对比：横向测评 Qwen-1.7B, Qwen-4B 与 Google Gemma-4B，验证了国产模型在中文语境下的优势。
-全流程范式：涵盖 Prompt Engineering (Zero/Few-shot) 与 Parameter-Efficient Fine-Tuning (LoRA)。
-深度消融实验：
-Prompt 消融：探究任务定义与角色扮演对指令遵循的影响。
-Rank 消融：对比 
-𝑟
-=
-16
-r=16 与 
-𝑟
-=
-64
-r=64，发现低秩设置能有效防止过拟合。
-双重评估体系：设计 Strict (严格匹配) 与 Soft (模糊匹配) 双指标，并深入分析了数据集标注滞后带来的“假阳性悖论”。
-📂 文件结构 (File Structure)
-<BASH>
+*   **多模型对比**：横向测评 Qwen-1.7B, Qwen-4B 与 Google Gemma-4B，验证了国产模型在中文语境下的优势。
+*   **三项对比内容**：涵盖 Prompt Engineering (Zero/Few-shot) 与 Parameter-Efficient Fine-Tuning (LoRA)。
+*   **深度消融实验**：探究不同模块对任务结果的影响。
+*   **双重评估体系**：设计 `Strict` (严格匹配) 与 `Soft` (模糊匹配) 双指标，参考原数据集代码构建评估指标的构建方法”。
+
+## 文件结构 (File Structure)
+
+```bash
 .
 ├── data/                   # 数据集文件夹 (chn_review_aste)
-│   ├── train.json          # 训练集
-│   ├── test.json           # 测试集
-│   └── dev.json            # 验证集
-├── output/                 # 模型推理输出结果 (.jsonl)
-├── src/                    # 源代码
-│   ├── train.py            # LoRA 微调训练脚本
-│   ├── inference.py        # 模型推理脚本
-│   ├── evaluation.py       # 评估脚本 (计算 Precision/Recall/F1)
-│   └── utils.py            # 数据预处理与Prompt构建工具
-├── report/                 # 课程设计报告与分析图表
-├── requirements.txt        # 环境依赖
-└── README.md               # 项目说明文档
-🚀 快速开始 (Getting Started)
-1. 环境安装
-建议使用 Conda 创建虚拟环境：
+├── result/                 # 实验结果 (.jsonl) 及其可视化
+├── src/                    # 数据集自带文件
+├── 1_convert.py            # [步骤1] 繁体转简体
+├── 2_visualize_data.py     # [步骤2] 数据集探索性分析与可视化
+├── 3_clean_data.py         # [步骤3] 数据清洗
+├── 4_zero_shot.py          # [实验A] 零样本 (Zero-shot) 推理脚本
+├── 5_few_shot.py           # [实验B] 少样本 (Few-shot) 推理脚本
+├── 6_train_lora.py         # [实验C] LoRA 微调训练主程序
+├── 7_predict_lora.py       # [步骤7] 加载微调权重进行预测
+├── 8_evaluation.py         # [步骤8] 核心评估脚本 (计算 Strict/Soft F1)
+├── 9_visualize_results.py  # [步骤9] 实验指标对比可视化绘图
+├── 10_visualize_train.py   # [步骤10] 绘制 Loss 训练曲线
+├── download_model.py       # 模型权重自动下载工具（也可手动从hugging face下载）
+└── json_analyze.py         # JSON 结构分析
 
-<BASH>
-conda create -n aste_llm python=3.10
-conda activate aste_llm
-pip install -r requirements.txt
-主要依赖库：torch, transformers, peft, accelerate, bitsandbytes.
-
-2. LoRA 微调 (Training)
-运行以下命令启动 Qwen-4B 的 LoRA 微调：
-
-<BASH>
-python src/train.py \
-    --model_name_or_path "Qwen/Qwen-4B" \
-    --data_path "data/train.json" \
-    --output_dir "checkpoints/qwen_lora" \
-    --lora_rank 16 \
-    --lora_alpha 32 \
-    --batch_size 4 \
-    --gradient_accumulation_steps 4
-3. 推理与评估 (Evaluation)
-微调后进行推理并生成评估报告：
-
-<BASH>
-# 生成推理结果
-python src/inference.py --model_path "checkpoints/qwen_lora" --test_data "data/test.json"
-# 计算指标
-python src/evaluation.py --pred_file "output/output_Qwen_4B_lora.jsonl"
-📊 实验结果 (Results)
-我们在 chn_review_aste 数据集上进行了全面测试。以下是 Qwen-4B 模型的主要指标对比：
-
-方法 (Method)	Strict Precision	Strict Recall	Strict F1	Soft F1
-Zero-shot	17.61%	26.31%	20.19%	53.27%
-Few-shot (4-shot)	19.89%	29.45%	22.46%	53.26%
-LoRA (r=16)	71.78%	84.77%	75.64%	79.40%
-结论： LoRA 微调后的 Strict F1 相比 Zero-shot 提升了约 3.7倍。
-
-🔍 消融分析亮点
-LoRA Rank 选择：实验发现 
-𝑟
-=
-16
-r=16 (F1=0.7564) 优于 
-𝑟
-=
-64
-r=64 (F1=0.7150)。证明了 ASTE 任务具有低内在维度，过高的秩会导致过拟合。
-模型选型：在相同微调设置下，Qwen-1.7B (F1=0.71) 显著优于 Gemma-4B (F1=0.64)，表明基座模型的语言分布（中文语料占比）对中文任务至关重要。
-📝 引用与致谢 (Credits)
-本项目是上海海事大学《自然语言处理》课程设计作品。
-
-作者： 黑向阳 (算法/训练), 王俊皓 (评估/工程)
-指导教师： 谢雨波
-数据集来源： Automated Construction of Chinese ASTE Dataset
-如有任何问题，欢迎提交 Issue 或联系作者。
