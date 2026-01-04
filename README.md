@@ -24,8 +24,11 @@
 ## 核心工作 (Core Work)
 
 *   **多模型对比**：横向测评 Qwen-1.7B, Qwen-4B 与 Google Gemma-4B，验证了国产模型在中文语境下的优势。
+*   
 *   **三项对比内容**：涵盖 Prompt Engineering (Zero/Few-shot) 与 Parameter-Efficient Fine-Tuning (LoRA)。
+*   
 *   **深度消融实验**：探究不同模块对任务结果的影响。
+*   
 *   **双重评估体系**：设计 `Strict` (严格匹配) 与 `Soft` (模糊匹配) 双指标，参考原数据集代码构建评估指标的构建方法”。
 
 ## 文件结构 (File Structure)
