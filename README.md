@@ -36,7 +36,7 @@
 ```bash
 .
 ├── data/                   # 数据集文件夹 (chn_review_aste)
-├── result/                 # 实验结果 (.jsonl) 及其可视化
+├── result/                 # 所有实验结果的可视化与Qwen1.7B的实验数据 (.jsonl)
 ├── src/                    # 数据集自带文件
 ├── 1_convert.py            # [步骤1] 繁体转简体
 ├── 2_visualize_data.py     # [步骤2] 数据集探索性分析与可视化
