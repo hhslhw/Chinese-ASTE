@@ -16,7 +16,9 @@
 我们基于 **Qwen (通义千问)** 和 **Gemma** 系列模型，系统对比了零样本推理 (Zero-shot)、少样本学习 (Few-shot) 以及 **LoRA 指令微调**的效果。
 
 原数据集下载地址：https://github.com/chiawen0104/chn_review_aste
+
 模型下载自hugging face平台
+
 云平台：AutoDl（租用5090实例）
 
 ## 核心工作 (Core Work)
@@ -43,6 +45,6 @@
 ├── 8_evaluation.py         # [步骤8] 核心评估脚本 (计算 Strict/Soft F1)
 ├── 9_visualize_results.py  # [步骤9] 实验指标对比可视化绘图
 ├── 10_visualize_train.py   # [步骤10] 绘制 Loss 训练曲线
-├── test_model.py       # 简单测试模型是否部署成功
+├── test_model.py           # 简单测试模型是否部署成功
 └── json_analyze.py         # JSON 结构分析
 
